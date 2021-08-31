@@ -9,21 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * һ���ܼ򵥵Ŀ⣬Ŀǰֻ������ȡ���Ӳ���
+ * 一个很简单的库，目前只用来获取帖子操作
  * 
  * @author MrXiaoM
  */
 public class McbbsUtil {
 	public static enum Operation{
-		// �ݲ���������ӭ��ȫ
-		CLOSE("�ر�"),
-		MOVE("�ƶ�"),
-		HIGH_LIGHT("���ø���"),
-		ADD_ICON("���ͼ��"),
-		ADD_STAMP("���ͼ��"),
-		BE_ESSENCED("���뾫��"),
-		UP_SERVER("����(������/���״���������)"),
-		UP("����(������)"),
+		// 暂不完整，欢迎补全
+		CLOSE("关闭"),
+		MOVE("移动"),
+		HIGH_LIGHT("设置高亮"),
+		ADD_ICON("添加图标"),
+		ADD_STAMP("添加图章"),
+		BE_ESSENCED("加入精华"),
+		UP_SERVER("提升(服务器/交易代理提升卡)"),
+		UP("提升(提升卡)"),
 		UNKNOWN("[ MrXiaoM \n Product ]");
 		String displayText;
 		Operation(String displayText){
@@ -108,22 +108,22 @@ public class McbbsUtil {
 			if (j > 3) {
 				String text = content.substring(i, content.indexOf("</td>", i));
 				if (text.contains("<a href=\"") && text.contains("uid=")) {
-					// uid �� �û���
+					// uid 和 用户名
 					int k = text.indexOf("uid=") + 4;
 					uid = text.substring(k, text.indexOf("\"", k));
 					name = text.substring(text.indexOf(">") + 1, text.indexOf("</a>"));
 					l++;
 				} else if (text.contains("<span title=\"")) {
-					// ����ʱ�䴦�� (�硰NСʱǰ������ϸʱ���ȡ)
+					// 特殊时间处理 (如“N小时前”的详细时间获取)
 					int k = text.indexOf("<span title=\"") + 13;
 					time = text.substring(k, text.indexOf("\"", k));
 				} else {
-					// ʱ��
+					// 时间
 					if (l % 5 == 2) time = text;
-					// ����
+					// 操作
 					if (l % 5 == 3) operation = text;
 					if (l % 5 == 4) {
-						// ʱ��
+						// 时限
 						term = text;
 						list.add(new ThreadOperation(uid, name, operation, time, term));
 						uid = name = operation = time = term = "";
